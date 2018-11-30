@@ -22,6 +22,20 @@ func (t *GalaxyTools) Bytes2CHString(buf []byte) string {
 	return string(decode)
 }
 
+func (t *GalaxyTools) Contains(ary []string, item string) bool {
+
+	if len(ary) == 0 {
+		return false
+	}
+
+	for _, val := range ary {
+		if val == item {
+			return true
+		}
+	}
+	return false
+}
+
 func (t *GalaxyTools) ResponseToString(coler io.ReadCloser) string {
 	buf, _ := ioutil.ReadAll(coler)
 	return string(buf)
