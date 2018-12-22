@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"strconv"
 
 	"golang.org/x/text/encoding/simplifiedchinese"
 )
@@ -39,6 +40,14 @@ func (t *GalaxyTools) Contains(ary []string, item string) bool {
 func (t *GalaxyTools) ResponseToString(coler io.ReadCloser) string {
 	buf, _ := ioutil.ReadAll(coler)
 	return string(buf)
+}
+
+func (t *GalaxyTools) MustInt(input string) int {
+	rev, err := strconv.Atoi(input)
+	if err != nil {
+		return 0
+	}
+	return rev
 }
 
 func (t *GalaxyTools) ReadFileLine(name string, fn func(line string)) {
