@@ -41,7 +41,6 @@ func DefaultGalaxyLokiClient() *GalaxyLokiClient {
 	api := GalaxyCfgFile.MustValue("loki", "api")
 	status := GalaxyCfgFile.MustBool("loki", "status")
 	label := GalaxyCfgFile.MustValue("loki", "label")
-
 	return NewGalaxyLokiClient(api, status, label)
 }
 
@@ -96,6 +95,10 @@ func (l *GalaxyLokiClient) sender(name string, data interface{}) {
 		GalaxyLogger.Error(err.Error())
 	}
 	defer rs.Body.Close()
-	rsBuf, _ := ioutil.ReadAll(rs.Body)
+	rsBuf, err := ioutil.ReadAll(rs.Body)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	fmt.Printf("loki return: %s\n", string(rsBuf))
 }
