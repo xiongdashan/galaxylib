@@ -3,8 +3,8 @@ package httplib
 import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/otwdev/galaxylib"
-	"github.com/otwdev/galaxylib/dblib"
+	"github.com/xiongdashan/galaxylib"
+	"github.com/xiongdashan/galaxylib/dblib"
 )
 
 type GApp struct {

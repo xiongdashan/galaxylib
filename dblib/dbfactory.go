@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/jinzhu/gorm"
-	"github.com/otwdev/galaxylib"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/xiongdashan/galaxylib"
 )
-import _ "github.com/jinzhu/gorm/dialects/postgres"
 
 type IDbFactory interface {
 	Db() *gorm.DB

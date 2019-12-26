@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/otwdev/galaxylib"
+	"github.com/xiongdashan/galaxylib"
 
-	"github.com/otwdev/galaxylib/dblib"
+	"github.com/xiongdashan/galaxylib/dblib"
 
 	"github.com/labstack/echo"
 )
