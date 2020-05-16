@@ -19,7 +19,7 @@ func NewGApp() *GApp {
 }
 
 // UseGContext 使用带有数据库
-func (g *GApp) UseGContext(gc echo.Context) {
+func (g *GApp) UseGContext(gc IGContext) {
 	// use gcontext by default dbfactory
 	g.App.Use(func(h echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -28,15 +28,15 @@ func (g *GApp) UseGContext(gc echo.Context) {
 	})
 
 	g.App.Use(middleware.BodyDump(func(c echo.Context, rqbody, rsbody []byte) {
-		gc := c.(*GContext)
-		gc.Db.Close()
+		gc := c.(IGContext)
+		gc.CloseDb()
 	}))
 }
 
 // AddRoute 路由
-func (g *GApp) AddRoute(path string, fn func(gc *GContext) error) {
+func (g *GApp) AddRoute(path string, fn func(gc IGContext) error) {
 	g.App.POST(path, func(ctx echo.Context) error {
-		gc := ctx.(*GContext)
+		gc := ctx.(IGContext)
 		return fn(gc)
 	})
 }
