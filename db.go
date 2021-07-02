@@ -3,8 +3,8 @@ package galaxylib
 import (
 	"fmt"
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 type DB struct {
@@ -19,12 +19,17 @@ func GalaxyDB() *DB {
 //OpenDb 打开数据库并执行
 func (d *DB) OpenDb(f func(*gorm.DB)) {
 	//fmt.Println(conn)
-	db, err := gorm.Open("postgres", d.Conn)
+	db, err := gorm.Open(postgres.Open(d.Conn), &gorm.Config{}) //gorm.Open("postgres", d.Conn)
 	//db.LogMode(true)
 	if err != nil {
 		panic(err)
 	}
-	defer db.Close()
+	defer func() {
+		sqlDb, err := db.DB()
+		if sqlDb != nil && err != nil {
+			sqlDb.Close()
+		}
+	}()
 	f(db)
 }
 

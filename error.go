@@ -12,6 +12,9 @@ func (self GalaxyError) Error() string {
 }
 
 func (self GalaxyError) FromError(code int, err error) *GalaxyError {
+	if err == nil {
+		return nil
+	}
 	return &GalaxyError{
 		Code:    code,
 		Message: err.Error(),

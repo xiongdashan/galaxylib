@@ -7,7 +7,7 @@ type ApiOutput struct {
 
 var DefaultApiOutput = &ApiOutput{}
 
-func (self ApiOutput) GalaxyOutput(code int, data interface{}) *ApiOutput {
+func (self ApiOutput) Out(code int, data interface{}) *ApiOutput {
 	return &ApiOutput{code, data}
 }
 

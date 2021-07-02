@@ -3,7 +3,8 @@ package galaxylib
 import (
 	"fmt"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 type DbScope struct {
@@ -14,7 +15,7 @@ func NewDbScope() *DbScope {
 
 	scope := &DbScope{}
 	d := GalaxyDB()
-	db, err := gorm.Open("postgres", d.Conn)
+	db, err := gorm.Open(postgres.Open(d.Conn), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
@@ -23,7 +24,8 @@ func NewDbScope() *DbScope {
 }
 
 func (c *DbScope) Close() {
-	c.Db.Close()
+	sqlDb, _ := c.Db.DB()
+	sqlDb.Close()
 }
 
 func (c *DbScope) DB() *gorm.DB {
@@ -44,7 +46,7 @@ func (c *DbScope) Get(val interface{}, id uint) {
 }
 
 func (c *DbScope) Update(val interface{}, attr ...interface{}) int64 {
-	ret := c.Db.Debug().Model(val).Update(attr)
+	ret := c.Db.Model(val).Updates(attr)
 	if ret.Error != nil {
 		fmt.Println(ret)
 		return 0

@@ -3,5 +3,5 @@
 
 
 ```
-go get -u github.com/otwdev/galaxylib
+go get -u github.com/xiongdashan/galaxylib
 ```

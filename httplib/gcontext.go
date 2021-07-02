@@ -6,11 +6,10 @@ import (
 	"strings"
 
 	"github.com/xiongdashan/galaxylib"
-	"go.uber.org/dig"
 
 	"github.com/xiongdashan/galaxylib/dblib"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 // IGContext 数据上下文
@@ -43,42 +42,61 @@ type IGContext interface {
 
 	// CloseDb
 	CloseDb()
+
+	// BindContext
+	BindContext(ctx echo.Context)
+
+	DB() dblib.IDbFactory
 }
 
 // GContext  Galaxy app 上下文
 type GContext struct {
 	echo.Context
-	Db dblib.IDbFactory
-	c  *dig.Container
+	db dblib.IDbFactory
 }
 
 // NewGContext instance ...
-func NewGContext(e echo.Context, db dblib.IDbFactory) *GContext {
+func NewGContext(db dblib.IDbFactory) *GContext {
 	g := &GContext{}
-	g.Context = e
-	g.Db = db
+	g.db = db
 	return g
+}
+
+// NewGContext instance ...
+func NewContext(db dblib.IDbFactory, ctx echo.Context) *GContext {
+	g := &GContext{ctx, db}
+	return g
+}
+
+// DB lib in context
+func (g *GContext) DB() dblib.IDbFactory {
+	return g.db
+}
+
+// BindContext 绑定
+func (g *GContext) BindContext(ctx echo.Context) {
+	g.Context = ctx
 }
 
 // CloseDb 关闭数据...
 func (g *GContext) CloseDb() {
-	g.Db.Close()
+	g.db.Close()
 }
 
 // Commit 数据提交
 func (g *GContext) Commit() {
-	g.Db.Commit()
+	g.db.Commit()
 }
 
 // Rollback 数据回滚
 func (g *GContext) Rollback() {
 
-	g.Db.Rollback()
+	g.db.Rollback()
 }
 
 // Train 开户事务
 func (g *GContext) Train() {
-	g.Db.Tran()
+	g.db.Tran()
 }
 
 // Err 返回错误信息
@@ -101,11 +119,12 @@ func (g *GContext) OK(data interface{}) error {
 
 // FilterIP IP过滤
 func (g *GContext) FilterIP(ip ...string) error {
-	realip := g.Context.RealIP()
 
 	if len(ip) == 0 {
 		ip = galaxylib.GalaxyCfgFile.MustValueArray("app", "ip", ",")
 	}
+
+	realip := g.Context.RealIP()
 
 	for _, i := range ip {
 		if strings.TrimSpace(i) == realip {
@@ -117,6 +136,7 @@ func (g *GContext) FilterIP(ip ...string) error {
 
 // FilterKey 过滤参数..
 func (g *GContext) FilterKey(key ...string) error {
+
 	rq := strings.TrimSpace(g.QueryParam("key"))
 	//g.Request().URL.RawQuery
 	k := ""

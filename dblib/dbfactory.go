@@ -3,9 +3,9 @@ package dblib
 import (
 	"fmt"
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/xiongdashan/galaxylib"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 type IDbFactory interface {
@@ -36,7 +36,7 @@ func NewDbFactory(conn string) *DbFactory {
 func (d *DbFactory) Db() *gorm.DB {
 	var err error
 	if d.db == nil {
-		d.db, err = gorm.Open("postgres", d.conn)
+		d.db, err = gorm.Open(postgres.Open(d.conn), &gorm.Config{})
 	}
 	if err != nil {
 		fmt.Println(err)
@@ -58,7 +58,7 @@ func (d *DbFactory) Rollback() {
 
 func (d *DbFactory) Close() {
 	if d.db != nil {
-		d.db.Close()
-		d.db = nil
+		sqlDb, _ := d.db.DB()
+		sqlDb.Close()
 	}
 }

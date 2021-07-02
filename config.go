@@ -31,5 +31,5 @@ func (c *GalaxyConfiger) GetConfig(path string) (cfg *goconfig.ConfigFile) {
 
 //GetDefaultConfig 获取配置文件
 func (c *GalaxyConfiger) GetDefaultConfig() *goconfig.ConfigFile {
-	return c.GetConfig("./config/config.ini")
+	return c.GetConfig("../config/config.ini")
 }
