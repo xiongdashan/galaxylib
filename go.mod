@@ -16,8 +16,8 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5
 	github.com/sirupsen/logrus v1.8.1
-	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a // indirect
-	golang.org/x/text v0.3.6
+	golang.org/x/crypto v0.1.0 // indirect
+	golang.org/x/text v0.4.0
 	gorm.io/driver/postgres v1.1.0
 	gorm.io/gorm v1.21.10
 )
