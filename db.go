@@ -1,47 +1,32 @@
 package galaxylib
 
 import (
-	"fmt"
-
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
+	"time"
 )
 
-type DB struct {
-	Conn string
-}
+var DbInstance *gorm.DB
 
-func GalaxyDB() *DB {
-	conn := GalaxyCfgFile.MustValue("db", "conn")
-	return &DB{conn}
-}
-
-//OpenDb 打开数据库并执行
-func (d *DB) OpenDb(f func(*gorm.DB)) {
-	//fmt.Println(conn)
-	db, err := gorm.Open(postgres.Open(d.Conn), &gorm.Config{}) //gorm.Open("postgres", d.Conn)
-	//db.LogMode(true)
-	if err != nil {
-		panic(err)
+// test env
+func init() {
+	dsn := mysql.Config{
+		Addr:                 GalaxyCfgFile.MustValue("database", "server_address"),
+		User:                 GalaxyCfgFile.MustValue("database", "user_name"),
+		Passwd:               GalaxyCfgFile.MustValue("database", "password"),
+		Net:                  "tcp",
+		DBName:               GalaxyCfgFile.MustValue("database", "db_name"),
+		Params:               map[string]string{"charset": "utf8", "parseTime": "True", "loc": "Local"},
+		Timeout:              5 * time.Second,
+		AllowNativePasswords: true,
 	}
-	defer func() {
-		sqlDb, err := db.DB()
-		if sqlDb != nil && err != nil {
-			sqlDb.Close()
-		}
-	}()
-	f(db)
-}
 
-func (d *DB) Add(val interface{}) (ret int64) {
+	db, err := gorm.Open("mysql", dsn.FormatDSN())
 
-	d.OpenDb(func(db *gorm.DB) {
-		rst := db.Create(&val)
-		if rst.Error != nil {
-			fmt.Println(rst.Error)
-			return
-		}
-		ret = rst.RowsAffected
-	})
-	return
+	if err != nil {
+		//fmt.Println(err)
+		panic(err.Error())
+	}
+
+	DbInstance = db
 }

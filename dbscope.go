@@ -3,24 +3,11 @@ package galaxylib
 import (
 	"fmt"
 
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 type DbScope struct {
 	Db *gorm.DB
-}
-
-func NewDbScope() *DbScope {
-
-	scope := &DbScope{}
-	d := GalaxyDB()
-	db, err := gorm.Open(postgres.Open(d.Conn), &gorm.Config{})
-	if err != nil {
-		panic(err)
-	}
-	scope.Db = db
-	return scope
 }
 
 func (c *DbScope) Close() {
