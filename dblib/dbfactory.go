@@ -3,7 +3,7 @@ package dblib
 import (
 	"fmt"
 
-	"github.com/xiongdashan/galaxylib"
+	"github.com/haibin0628/galaxylib"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
