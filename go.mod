@@ -1,4 +1,4 @@
-module github.com/xiongdashan/galaxylib
+module github.com/haibin0628/galaxylib
 
 go 1.16
 
